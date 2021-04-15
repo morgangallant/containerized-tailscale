@@ -6,9 +6,10 @@ WORKDIR /mg
 RUN go build -o demo .
 
 # Install Tailscale
-RUN go install tailscale.com/cmd/tailscale@v1.6.0
-RUN go install tailscale.com/cmd/tailscaled@v1.6.0
-RUN mkdir -p /var/lib/tailscale # Will be used to store Tailscale data.
+RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/bionic.gpg | sudo apt-key add -
+RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/bionic.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+RUN sudo apt-get update
+RUN sudo apt-get install tailscale
 
 # Configure Entrypoint
-ENTRYPOINT ["/mg/entrypoint.sh"]
+# ENTRYPOINT ["/mg/entrypoint.sh"]
