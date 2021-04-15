@@ -13,13 +13,19 @@ chown irc.irc /var/run/tailscale
 cp /var/lib/tailscaled/tailscaled.state /tmp/tailscaled/tailscaled.state
 chown irc.irc /tmp/tailscaled/tailscaled.state
 
+echo "Starting Tailscaled"
+
 nohup sudo -u irc tailscaled \
 --tun=userspace-networking \
 --socks5-server=localhost:1080 \
 --state=/tmp/tailscaled/tailscaled.state \
 --socket=/var/run/tailscale/tailscaled.sock --port 41641 &
 
+echo "Waiting for Tailscaled"
+
 until tailscale up --authkey $TAILSCALE_KEY; do sleep 1; done
+
+echo "Connected to Tailscale"
 
 # Run the application.
 /mg/demo
