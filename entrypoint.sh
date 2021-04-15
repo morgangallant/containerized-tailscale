@@ -21,5 +21,5 @@ nohup sudo -u irc tailscaled \
 
 until tailscale up --authkey $TAILSCALE_KEY; do sleep 1; done
 
-# # Run the application.
+# Run the application.
 /mg/demo
