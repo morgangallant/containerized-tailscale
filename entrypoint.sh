@@ -3,6 +3,8 @@
 # The entrypoint for this docker container. This script is responsible for
 # configuring Tailscale within this container, and then starting the application.
 
+echo "Starting Demo"
+
 # See https://github.com/tailscale/tailscale/issues/634.
 rm -rf /tmp/tailscaled
 mkdir -p /tmp/tailscaled
