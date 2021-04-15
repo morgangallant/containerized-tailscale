@@ -7,9 +7,9 @@ tailscaled \
 --socks5-server=localhost:1080 \
 --state=/tailscale/tailscale.state \
 --tun=userspace-networking \
---socket=/tailscale/tailscale.sock &
+--socket=/tailscale/tailscale.sock
 
-tailscale --socket=/tailscale/tailscale.sock up --authkey $TAILSCALE_KEY
+# tailscale --socket=/tailscale/tailscale.sock up --authkey $TAILSCALE_KEY
 
-# Run the application.
-/mg/demo
+# # Run the application.
+# /mg/demo
