@@ -5,9 +5,9 @@
 
 tailscaled \
 --socks5-server=localhost:1080 \
---state=/tailscale/tailscale.state \
+--state=/var/lib/tailscale/tailscale.state \
 --tun=userspace-networking \
---socket=/tailscale/tailscale.sock
+--socket=/var/lib/tailscale/tailscale.sock
 
 # tailscale --socket=/tailscale/tailscale.sock up --authkey $TAILSCALE_KEY
 

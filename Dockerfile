@@ -8,7 +8,7 @@ RUN go build -o demo .
 # Install Tailscale
 RUN go install tailscale.com/cmd/tailscale@v1.6.0
 RUN go install tailscale.com/cmd/tailscaled@v1.6.0
-RUN mkdir /tailscale # Will be used to store Tailscale data.
+RUN mkdir -p /var/lib/tailscale # Will be used to store Tailscale data.
 
 # Configure Entrypoint
 ENTRYPOINT ["/mg/entrypoint.sh"]
