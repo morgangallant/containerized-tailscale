@@ -11,5 +11,7 @@ RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/bionic.list | tee /etc/a
 RUN apt-get update
 RUN apt-get install tailscale -y
 
+ARG TAILSCALE_KEY
+
 # Configure Entrypoint
 # ENTRYPOINT ["/mg/entrypoint.sh"]
