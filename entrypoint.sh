@@ -14,8 +14,8 @@ echo "Starting Demo"
 echo "Started Tailscaled"
 
 # Authenticate
-until /home/coder/go/bin/tailscale up \
-    --socket=/home/coder/.tailscale/tailscale.sock \
+until /home/coder/go/bin/tailscale --socket=/home/coder/.tailscale/tailscale.sock \
+    up \
     --authkey=$TAILSCALE_KEY
 do 
     echo "Waiting for Tailscale Authentication"
