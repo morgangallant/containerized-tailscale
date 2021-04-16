@@ -42,4 +42,4 @@ ARG TAILSCALE_KEY
 RUN mkdir -p .tailscale/
 
 # Configure Entrypoint
-ENTRYPOINT ["/mg/entrypoint.sh"]
+ENTRYPOINT ["/home/coder/entrypoint.sh"]
