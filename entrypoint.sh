@@ -6,4 +6,4 @@
 echo "Starting Demo"
 
 # Run the application.
-/home/coder/mg/demo
+/home/coder/demo

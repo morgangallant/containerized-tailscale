@@ -14,8 +14,7 @@ WORKDIR /home/coder
 USER coder
 
 # Build the Application
-ADD . /home/coder/mg
-WORKDIR /home/coder/mg
+ADD . /home/coder/
 RUN go build -o demo .
 
 # Install Tailscale
