@@ -1,4 +1,4 @@
-FROM golang:1.16
+FROM debian:10
 
 # Configure user.
 RUN adduser --gecos '' --disabled-password coder && \
@@ -12,6 +12,12 @@ RUN ARCH="$(dpkg --print-architecture)" && \
     printf "user: coder\ngroup: coder\n" > /etc/fixuid/config.yml
 WORKDIR /home/coder
 USER coder
+
+# Install Go
+RUN sudo apt-get install wget -y
+RUN wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+RUN export PATH=$PATH:/home/coder/go/bin:/usr/local/go/bin
 
 # Build the Application
 ADD . /home/coder/
