@@ -19,7 +19,7 @@ until /home/coder/go/bin/tailscale --socket=/home/coder/.tailscale/tailscale.soc
     --authkey=$TAILSCALE_KEY
 do 
     echo "Waiting for Tailscale Authentication"
-    sleep 1
+    sleep 5
 done
 
 echo "Authenticated with Tailscale"
