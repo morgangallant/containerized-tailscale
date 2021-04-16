@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"golang.org/x/net/proxy"
 )
@@ -51,14 +51,12 @@ func run() error {
 	return http.ListenAndServe(":"+port(), nil)
 }
 
-const chuckNorrisAPIUrl = "https://api.chucknorris.io/jokes/random"
+const privateUrl = "http://100.73.249.25/"
 
 func handler(client *http.Client) http.HandlerFunc {
-	type response struct {
-		Value string `json:"value"`
-	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		req, err := http.NewRequest("GET", chuckNorrisAPIUrl, nil)
+		start := time.Now()
+		req, err := http.NewRequest("GET", privateUrl, nil)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -69,11 +67,7 @@ func handler(client *http.Client) http.HandlerFunc {
 			return
 		}
 		defer resp.Body.Close()
-		var rbody response
-		if err := json.NewDecoder(resp.Body).Decode(&rbody); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		fmt.Fprintf(w, "Your Chuck Norris fact is: %s", rbody.Value)
+		fmt.Fprintf(w, "Completed request to http://100.73.249.25/ in %d ms.\n\n", time.Since(start).Milliseconds())
+		fmt.Fprintln(w, "This is a demonstration of an outgoing SOCKS5 HTTP request from a container running inside Railway (https://railway.app) using some of the new Tailscale 1.16 Userspace Networking stuff.")
 	}
 }
