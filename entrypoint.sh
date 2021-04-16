@@ -5,5 +5,7 @@
 
 echo "Starting Demo"
 
+# tailscale{,d} in /home/coder/go/bin
+
 # Run the application.
 /home/coder/demo

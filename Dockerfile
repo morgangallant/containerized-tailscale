@@ -35,17 +35,14 @@ USER coder
 # Install Go
 RUN wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
-RUN export PATH=$PATH:/home/coder/go/bin:/usr/local/go/bin
 
 # Build the Application
 ADD . /home/coder/
-RUN go build -o demo .
+RUN /usr/local/go/bin/go build -o demo .
 
 # Install Tailscale
-RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/bionic.gpg | sudo apt-key add -
-RUN curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/bionic.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-RUN sudo apt-get update
-RUN sudo apt-get install tailscale -y
+RUN /usr/local/go/bin/go install tailscale.com/cmd/tailscale@v1.6.0
+RUN /usr/local/go/bin/go install tailscale.com/cmd/tailscale@v1.6.0
 
 # Get the Tailscale Key from the Environment.
 ARG TAILSCALE_KEY
