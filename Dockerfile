@@ -25,7 +25,7 @@ USER coder
 # Install Go
 RUN wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
-RUN rm https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
+RUN rm go1.16.3.linux-amd64.tar.gz
 
 # Build the Application
 ADD . /home/coder/
