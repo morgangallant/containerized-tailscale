@@ -9,7 +9,18 @@ echo "Starting Demo"
 /home/coder/go/bin/tailscaled --socks5-server=localhost:1080 \
     --state=/home/coder/.tailscale/tailscale.state \
     --tun=userspace-networking \
-    --socket=/home/coder/.tailscale/tailscale.sock
+    --socket=/home/coder/.tailscale/tailscale.sock &
+
+echo "Started Tailscaled"
+
+# Authenticate
+until /home/coder/go/bin/tailscale up --authkey $TAILSCALE_KEY
+do 
+    echo "Waiting for Tailscale Authentication"
+    sleep 1
+done
+
+echo "Authenticated with Tailscale"
 
 # Run the application.
 /home/coder/demo
