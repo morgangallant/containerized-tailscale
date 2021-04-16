@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 
@@ -30,11 +32,12 @@ func socks5Client() (*http.Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &http.Client{
-		Transport: &http.Transport{
-			Dial: dialer.Dial,
-		},
-	}, nil
+	dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+		return dialer.Dial(network, address)
+	}
+	transport := &http.Transport{DialContext: dialContext,
+		DisableKeepAlives: true}
+	return &http.Client{Transport: transport}, nil
 }
 
 func run() error {
