@@ -5,18 +5,8 @@ RUN apt-get update \
  && apt-get install -y \
     curl \
     wget \
-    dumb-init \
-    zsh \
-    htop \
-    locales \
-    man \
-    nano \
     git \
-    procps \
-    openssh-client \
     sudo \
-    vim.tiny \
-    lsb-release \
   && rm -rf /var/lib/apt/lists/*
 
 # Configure user.
@@ -35,6 +25,7 @@ USER coder
 # Install Go
 RUN wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
+RUN rm https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
 
 # Build the Application
 ADD . /home/coder/
@@ -42,7 +33,7 @@ RUN /usr/local/go/bin/go build -o demo .
 
 # Install Tailscale
 RUN /usr/local/go/bin/go install tailscale.com/cmd/tailscale@v1.6.0
-RUN /usr/local/go/bin/go install tailscale.com/cmd/tailscale@v1.6.0
+RUN /usr/local/go/bin/go install tailscale.com/cmd/tailscaled@v1.6.0
 
 # Get the Tailscale Key from the Environment.
 ARG TAILSCALE_KEY
