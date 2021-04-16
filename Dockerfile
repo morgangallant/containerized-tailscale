@@ -2,6 +2,7 @@ FROM golang:1.16
 
 # Configure user.
 RUN adduser --gecos '' --disabled-password coder && \
+    mkdir -p /etc/sudoers.d && \
     echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/nopasswd
 RUN ARCH="$(dpkg --print-architecture)" && \
     curl -fsSL "https://github.com/boxboat/fixuid/releases/download/v0.5/fixuid-0.5-linux-$ARCH.tar.gz" | tar -C /usr/local/bin -xzf - && \
