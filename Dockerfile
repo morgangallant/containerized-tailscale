@@ -1,5 +1,24 @@
 FROM debian:10
 
+# Configure basics.
+RUN apt-get update \
+ && apt-get install -y \
+    curl \
+    wget \
+    dumb-init \
+    zsh \
+    htop \
+    locales \
+    man \
+    nano \
+    git \
+    procps \
+    openssh-client \
+    sudo \
+    vim.tiny \
+    lsb-release \
+  && rm -rf /var/lib/apt/lists/*
+
 # Configure user.
 RUN adduser --gecos '' --disabled-password coder && \
     mkdir -p /etc/sudoers.d && \
@@ -14,7 +33,6 @@ WORKDIR /home/coder
 USER coder
 
 # Install Go
-RUN sudo apt-get install wget -y
 RUN wget https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.16.3.linux-amd64.tar.gz
 RUN export PATH=$PATH:/home/coder/go/bin:/usr/local/go/bin
