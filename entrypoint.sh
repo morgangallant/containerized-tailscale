@@ -5,7 +5,11 @@
 
 echo "Starting Demo"
 
-# tailscale{,d} in /home/coder/go/bin
+# Starting Tailscaled
+tailscaled --socks5-server=localhost:1080 \
+    --state=/home/coder/.tailscale/tailscale.state \
+    --tun=userspace-networking \
+    --socket=/home/coder/.tailscale/tailscale.sock
 
 # Run the application.
 /home/coder/demo
