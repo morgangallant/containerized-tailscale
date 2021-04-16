@@ -53,7 +53,7 @@ func handler(client *http.Client) http.HandlerFunc {
 		Value string `json:"value"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		req, err := http.NewRequestWithContext(r.Context(), "GET", chuckNorrisAPIUrl, nil)
+		req, err := http.NewRequest("GET", chuckNorrisAPIUrl, nil)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
