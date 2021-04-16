@@ -35,9 +35,11 @@ func socks5Client() (*http.Client, error) {
 	dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
 		return dialer.Dial(network, address)
 	}
-	transport := &http.Transport{DialContext: dialContext,
-		DisableKeepAlives: true}
-	return &http.Client{Transport: transport}, nil
+	transport := &http.Transport{
+		DialContext:       dialContext,
+		DisableKeepAlives: true,
+	}
+	return &http.Client{Transport: transport, Timeout: 0}, nil
 }
 
 func run() error {
