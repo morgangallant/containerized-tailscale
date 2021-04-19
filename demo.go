@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -33,6 +35,13 @@ func tailscaleAPIKey() string {
 		return k
 	}
 	panic("missing TAILSCALE_API_KEY environment variable")
+}
+
+func tailnet() string {
+	if n, ok := os.LookupEnv("TAILSCALE_TAILNET"); ok {
+		return n
+	}
+	panic("missing TAILSCALE_TAILNET environment variable")
 }
 
 const proxyAddr = "localhost:1080"
@@ -73,15 +82,60 @@ func handler(client *http.Client) http.HandlerFunc {
 	}
 }
 
-const tailnetDeviceDeleteUrl = "https://api.tailscale.com/api/v2/device/%s"
+const (
+	tailnetGetListDevicesUrl = "https://api.tailscale.com/api/v2/tailnet/%s/devices"
+	tailnetDeviceDeleteUrl   = "https://api.tailscale.com/api/v2/device/%s"
+)
 
-func removeMachineFromTailscale(hn, tkey string) error {
-	url := fmt.Sprintf(tailnetDeviceDeleteUrl, hn)
+type device struct {
+	Hostname string `json:"hostname"`
+	ID       string `json:"id"`
+}
+
+var errNotFound = errors.New("device with id not found")
+
+func findDeviceIDWithHostname(tkey, tailnet, hn string) (string, error) {
+	url := fmt.Sprintf(tailnetGetListDevicesUrl, tailnet)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+	req.SetBasicAuth(tkey, "")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("non-ok status code %d returned from tailscale api: %s", resp.StatusCode, resp.Status)
+	}
+	var buf struct {
+		Devices []device `json:"devices"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&buf); err != nil {
+		return "", err
+	}
+	for _, d := range buf.Devices {
+		if d.Hostname == hn {
+			return d.ID, nil
+		}
+	}
+	return "", errNotFound
+}
+
+func removeMachineFromTailscale(tkey, tailnet, hn string) error {
+	id, err := findDeviceIDWithHostname(tkey, tailnet, hn)
+	if err == errNotFound {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	url := fmt.Sprintf(tailnetDeviceDeleteUrl, id)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return err
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Basic %s:", tkey))
+	req.SetBasicAuth(tkey, "")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
@@ -93,7 +147,7 @@ func removeMachineFromTailscale(hn, tkey string) error {
 	return nil
 }
 
-func runServer(s *http.Server, hn, tkey string, stop <-chan struct{}) error {
+func runServer(s *http.Server, hn, tkey, tailnet string, stop <-chan struct{}) error {
 	errc := make(chan error)
 	go func() {
 		errc <- s.ListenAndServe()
@@ -115,9 +169,11 @@ func runServer(s *http.Server, hn, tkey string, stop <-chan struct{}) error {
 	// We only remove ourselves from Tailscale if we are in production.
 	// For demo purposes, "production" means we're on a linux machine.
 	if runtime.GOOS == "linux" {
-		if err := removeMachineFromTailscale(hn, tkey); err != nil {
+		if err := removeMachineFromTailscale(tkey, tailnet, hn); err != nil {
 			return err
 		}
+	} else {
+		log.Printf("Skipping tailscale removal cuz we're in dev.")
 	}
 	return nil
 }
@@ -144,7 +200,7 @@ func run() error {
 	}
 
 	// Setup signal listeners to automatically get rid of the server
-	tkey := tailscaleAPIKey()
+	tkey, tnet := tailscaleAPIKey(), tailnet()
 	rctx, shutdown := context.WithCancel(context.Background())
 	defer shutdown()
 
@@ -156,5 +212,5 @@ func run() error {
 		shutdown()
 	}()
 
-	return runServer(s, hn, tkey, rctx.Done())
+	return runServer(s, hn, tkey, tnet, rctx.Done())
 }
