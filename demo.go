@@ -43,6 +43,11 @@ func socks5Client() (*http.Client, error) {
 }
 
 func run() error {
+	hn, err := os.Hostname()
+	if err != nil {
+		return err
+	}
+	log.Printf("Running on hostname %s.", hn)
 	client, err := socks5Client()
 	if err != nil {
 		return err
