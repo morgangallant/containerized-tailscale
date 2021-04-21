@@ -25,4 +25,5 @@ done
 echo "Authenticated with Tailscale"
 
 # Run the application.
-/home/coder/demo
+# Using 'exec' here should forward SIGINT & SIGTERM to program for cleanup.
+exec /home/coder/demo
