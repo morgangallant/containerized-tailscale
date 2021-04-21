@@ -157,7 +157,7 @@ func runServer(s *http.Server, hn, tkey, tailnet string, stop <-chan struct{}) e
 	case err = <-errc:
 	case <-stop:
 	}
-	if err != http.ErrServerClosed {
+	if err != nil && err != http.ErrServerClosed {
 		return err
 	}
 	// At this point, we want to shutdown the HTTP server and cleanup.
@@ -172,6 +172,7 @@ func runServer(s *http.Server, hn, tkey, tailnet string, stop <-chan struct{}) e
 		if err := removeMachineFromTailscale(tkey, tailnet, hn); err != nil {
 			return err
 		}
+		log.Printf("Removed ourselves from Tailscale.")
 	} else {
 		log.Printf("Skipping tailscale removal cuz we're in dev.")
 	}
