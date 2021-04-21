@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 	"time"
 
@@ -168,7 +167,7 @@ func runServer(s *http.Server, hn, tkey, tailnet string, stop <-chan struct{}) e
 	}
 	// We only remove ourselves from Tailscale if we are in production.
 	// For demo purposes, "production" means we're on a linux machine.
-	if runtime.GOOS == "linux" {
+	if hn != "mbp" {
 		if err := removeMachineFromTailscale(tkey, tailnet, hn); err != nil {
 			return err
 		}
