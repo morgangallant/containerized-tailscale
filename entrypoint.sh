@@ -6,7 +6,7 @@
 echo "Starting Demo"
 
 # Starting Tailscaled
-tailscaled --socks5-server=localhost:1080 \
+./tailscaled --socks5-server=localhost:1080 \
     --state=$HOME/tailscale/tailscale.state \
     --tun=userspace-networking \
     --socket=$HOME/tailscale/tailscale.sock
@@ -14,7 +14,7 @@ tailscaled --socks5-server=localhost:1080 \
 echo "Started Tailscaled"
 
 # Authenticate
-until tailscale --socket=$HOME/tailscale/tailscale.sock \
+until ./tailscale --socket=$HOME/tailscale/tailscale.sock \
     up \
     --authkey=$TAILSCALE_KEY
 do 
@@ -26,4 +26,4 @@ echo "Authenticated with Tailscale"
 
 # Run the application.
 # Using 'exec' here should forward SIGINT & SIGTERM to program for cleanup.
-exec $HOME/build/demo
+exec $HOME/demo
