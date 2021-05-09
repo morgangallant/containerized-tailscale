@@ -6,10 +6,10 @@
 echo "Starting Demo"
 
 # Starting Tailscaled
-(&>/dev/null tailscaled --socks5-server=localhost:1080 \
+tailscaled --socks5-server=localhost:1080 \
     --state=/tailscale/tailscale.state \
     --tun=userspace-networking \
-    --socket=/tailscale/tailscale.sock &)
+    --socket=/tailscale/tailscale.sock
 
 echo "Started Tailscaled"
 
