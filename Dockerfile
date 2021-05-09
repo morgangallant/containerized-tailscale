@@ -6,4 +6,5 @@ WORKDIR /build/
 RUN go build -o demo .
 ARG TAILSCALE_KEY
 RUN mkdir -p /tailscale
+RUN ls /build
 ENTRYPOINT ["/build/entrypoint.sh"]
