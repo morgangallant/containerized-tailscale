@@ -35,4 +35,4 @@ COPY --from=build $GOPATH/bin/tailscaled $HOME/tailscaled
 # Fire up tailscaled, authenticate using a reusable key, and run.
 ARG TAILSCALE_KEY
 RUN mkdir -p $HOME/tailscale-storage
-ENTRYPOINT ./$HOME/entrypoint.sh
+ENTRYPOINT bash $HOME/entrypoint.sh
