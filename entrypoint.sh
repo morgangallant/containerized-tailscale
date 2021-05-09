@@ -7,14 +7,14 @@ echo "Starting Demo"
 
 # Starting Tailscaled
 ./tailscaled --socks5-server=localhost:1080 \
-    --state=$HOME/tailscale/tailscale.state \
+    --state=$HOME/tailscale-storage/tailscale.state \
     --tun=userspace-networking \
-    --socket=$HOME/tailscale/tailscale.sock
+    --socket=$HOME/tailscale-storage/tailscale.sock
 
 echo "Started Tailscaled"
 
 # Authenticate
-until ./tailscale --socket=$HOME/tailscale/tailscale.sock \
+until ./tailscale --socket=$HOME/tailscale-storage/tailscale.sock \
     up \
     --authkey=$TAILSCALE_KEY
 do 
