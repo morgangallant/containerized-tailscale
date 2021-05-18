@@ -9,7 +9,7 @@ echo "Starting Demo"
 ./tailscaled --socks5-server=localhost:1080 \
     --state=$HOME/tailscale-storage/tailscale.state \
     --tun=userspace-networking \
-    --socket=$HOME/tailscale-storage/tailscale.sock
+    --socket=$HOME/tailscale-storage/tailscale.sock &
 
 echo "Started Tailscaled"
 
