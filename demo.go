@@ -60,7 +60,7 @@ func socks5Client() (*http.Client, error) {
 	return &http.Client{Transport: transport, Timeout: 0}, nil
 }
 
-const privateUrl = "http://100.73.249.25/"
+const privateUrl = "http://[fd7a:115c:a1e0:ab12:4843:cd96:6249:f919]/"
 
 func handler(client *http.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
